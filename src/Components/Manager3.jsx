@@ -6,9 +6,16 @@ export function Manager3() {
   const [visible, setVisible] = useState({});
   const [error, setError] = useState("");
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const fetchPasswords = async () => {
+    if (!BACKEND_URL) {
+      setError("VITE_BACKEND_URL not found in environment.");
+      return;
+    }
+
     try {
-      const res = await fetch("http://localhost:3001");
+      const res = await fetch(BACKEND_URL);
       const data = await res.json();
       setPasswords(data);
     } catch (err) {
@@ -28,7 +35,7 @@ export function Manager3() {
     if (!form.website || !form.username || !form.password) return;
 
     try {
-      await fetch("http://localhost:3001", {
+      await fetch(BACKEND_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
